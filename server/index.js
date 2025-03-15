@@ -1,14 +1,12 @@
-require("dotenv").config();
-const express = require("express");
-const app = express();
-const port = process.env.PORT || 4000;
+const app = require("./app");
+const http = require("http");
+const config = require("./config/config");
+const logger = require("./utils/logger");
 
-// Define a simple route
-app.get("/", (req, res) => {
-  res.send("Hello, world!");
-});
+// Create a server using the app from the app.js file
+const server = http.createServer(app);
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+// const PORT = config.PORT || 4000;
+server.listen(config.PORT, () => {
+  logger.info(`Server running on port ${config.PORT}`);
 });
