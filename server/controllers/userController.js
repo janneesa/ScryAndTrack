@@ -1,18 +1,32 @@
+const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
-// Create a new user
+// Generate JWT
+const generateToken = (_id) => {
+  return jwt.sign({ _id }, process.env.SECRET, {
+    expiresIn: "7d",
+  });
+};
+
+// @desc    Register new user
+// @route   POST /api/user/signup
+// @access  Public
 const createUser = async (req, res) => {
+  const { email, password, confirmPassword } = req.body;
+
   try {
-    const { email, password, confirmPassword } = req.body;
+    // Custom signup method in the User model
+    const user = await User.signup(email, password, confirmPassword);
 
-    if (!email || !password || !confirmPassword) {
-      return res.status(400).json({ error: "Email and password are required" });
+    if (user) {
+      const token = generateToken(user.id);
+      return res.status(201).json({ ...user, token });
+    } else {
+      res.status(400);
+      throw new Error("Invalid user data");
     }
-
-    const user = await User.signup(email, password, confirmPassword); // Using the static signup method
-    res.status(201).json(user);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    handleDuplicateError(error, res);
   }
 };
 

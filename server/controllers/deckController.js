@@ -1,16 +1,20 @@
 const mongoose = require("mongoose");
 const Deck = require("../models/deckModel");
 
-// Create a new deck
+// @desc Create a new deck
+// @route POST /api/decks
+// @access Private
 const createDeck = async (req, res) => {
-  try {
-    const { owner, name, commander, colors } = req.body;
+  const id = req.user.id;
 
-    if (!mongoose.Types.ObjectId.isValid(owner)) {
+  try {
+    const { name, commander, colors } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid user ID" });
     }
 
-    const deck = await Deck.newDeck(owner, name, commander, colors);
+    const deck = await Deck.newDeck(id, name, commander, colors);
     res.status(201).json(deck);
   } catch (error) {
     res.status(400).json({ error: error.message });
