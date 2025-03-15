@@ -1,16 +1,20 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+const cors = require("cors");
+const connectDB = require("./config/db");
 const {
   unknownEndpoint,
   errorHandler,
   requestLogger,
 } = require("./middlewares/customMiddleware");
-const cors = require("cors");
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
+
+// Connect to the database using the connectDB function from the config/db.js file
+connectDB();
 
 // Use the requestLogger middleware for all routes
 app.use(requestLogger);
