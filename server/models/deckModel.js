@@ -11,6 +11,9 @@ const deckSchema = new Schema(
     },
     name: { type: String, required: true, trim: true },
     commander: { type: String, required: true, trim: true },
+    games: { type: Number, default: 0 },
+    wins: { type: Number, default: 0 },
+    winRate: { type: Number, default: 0 },
     colors: [{ type: String, enum: ["W", "U", "B", "R", "G"] }], // White, Blue, Black, Red, Green
   },
   {
@@ -29,6 +32,10 @@ deckSchema.statics.newDeck = async function (owner, name, commander, colors) {
   }
 
   const deck = await this.create({ owner, name, commander, colors });
+
+  const user = await mongoose.model("User").findById(owner);
+  user.decks.push(deck._id);
+  await user.save();
 
   return deck.toJSON();
 };
