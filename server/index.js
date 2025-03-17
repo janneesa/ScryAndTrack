@@ -2,13 +2,13 @@ const app = require("./app");
 const http = require("http");
 const config = require("./config/config");
 const logger = require("./utils/logger");
-const approveOldMatches = require("./utils/matchApprovalWorker");
+const checkMatches = require("./utils/matchApprovalWorker");
 
 // Create a server using the app from the app.js file
 const server = http.createServer(app);
 
 // Start the match approval worker
-approveOldMatches();
+checkMatches();
 
 // const PORT = config.PORT || 4000;
 server.listen(config.PORT, () => {

@@ -91,4 +91,64 @@ const deleteDeck = async (req, res) => {
   }
 };
 
-module.exports = { createDeck, getDeckById, updateDeck, deleteDeck };
+// @desc Used by matchApprovalWorker to update winning decks stats
+const updateWinnerDeckStats = async (match, session) => {
+  const { winner } = match;
+
+  try {
+    const deck = await Deck.findById(winner.deckId).session(session);
+    if (!deck) {
+      console.error(`Deck ${winner.deckId} not found`);
+      return false;
+    }
+
+    const updatedDeck = {
+      winRate: (((deck.wins + 1) / (deck.games + 1)) * 100).toFixed(2),
+      games: deck.games + 1,
+      wins: deck.wins + 1,
+    };
+
+    Object.assign(deck, updatedDeck);
+    await deck.save({ session });
+    return true;
+  } catch (error) {
+    console.error(`Error updating deck ${winner.deckId}:`, error);
+    return false;
+  }
+};
+
+// @desc Used by matchApprovalWorker to update losing decks stats
+const updateLoserDeckStats = async (match, session) => {
+  const { losers } = match;
+
+  try {
+    for (const deckId of losers.values()) {
+      const deck = await Deck.findById(deckId).session(session);
+      if (!deck) {
+        console.error(`Deck ${deckId} not found`);
+        return false;
+      }
+
+      const updatedDeck = {
+        winRate: ((deck.wins / (deck.games + 1)) * 100).toFixed(2),
+        games: deck.games + 1,
+      };
+
+      Object.assign(deck, updatedDeck);
+      await deck.save({ session });
+    }
+    return true;
+  } catch (error) {
+    console.error(`Error updating deck ${deckId}:`, error);
+    return false;
+  }
+};
+
+module.exports = {
+  createDeck,
+  getDeckById,
+  updateDeck,
+  deleteDeck,
+  updateWinnerDeckStats,
+  updateLoserDeckStats,
+};

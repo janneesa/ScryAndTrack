@@ -23,6 +23,7 @@ const userSchema = new Schema(
     matchHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Match" }], // List of match IDs
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // List of friend IDs
     gamesPlayed: { type: Number, default: 0 },
+    gamesWon: { type: Number, default: 0 },
     mostPlayedDeck: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Deck",
