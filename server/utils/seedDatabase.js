@@ -2,6 +2,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const User = require("../models/userModel");
 const Deck = require("../models/deckModel");
+const Match = require("../models/matchModel");
 const bcrypt = require("bcryptjs");
 
 const connectDB = async () => {
@@ -17,6 +18,7 @@ const connectDB = async () => {
 const clearDatabase = async () => {
   await User.deleteMany({});
   await Deck.deleteMany({});
+  await Match.deleteMany({});
 };
 
 const createTestUsers = async () => {
@@ -40,7 +42,6 @@ const createTestUsers = async () => {
   return createdUsers;
 };
 
-// filepath: c:\Users\janne\Coding\vsProjects\ScryAndTrack\server\utils\seedDatabase.js
 const createTestDecks = async (users) => {
   const decks = [
     { name: "Deck 1", commander: "Commander 1", colors: ["W"] },
@@ -67,16 +68,59 @@ const createTestDecks = async (users) => {
   return createdDecks;
 };
 
+const createTestMatches = async (users) => {
+  const matches = [
+    {
+      losers: new Map([
+        [users[0].id, users[0].decks[0]._id],
+        [users[1].id, users[1].decks[0]._id],
+      ]),
+      winner: {
+        playerId: users[2].id,
+        deckId: users[2].decks[0]._id,
+      },
+    },
+    {
+      losers: new Map([
+        [users[1].id, users[1].decks[1]._id],
+        [users[2].id, users[2].decks[1]._id],
+      ]),
+      winner: {
+        playerId: users[0].id,
+        deckId: users[0].decks[1]._id,
+      },
+    },
+    {
+      losers: new Map([
+        [users[0].id, users[0].decks[0]._id],
+        [users[2].id, users[2].decks[1]._id],
+      ]),
+      winner: {
+        playerId: users[1].id,
+        deckId: users[1].decks[0]._id,
+      },
+    },
+  ];
+
+  const createdMatches = await Match.insertMany(matches);
+  return createdMatches;
+};
+
 const seedDatabase = async () => {
   await connectDB();
   await clearDatabase();
 
-  const users = await createTestUsers();
-  const decks = await createTestDecks(users);
+  await createTestUsers();
+  const users = await User.find({});
+  await createTestDecks(users);
+  const usersWithDecks = await User.find({});
+  await createTestMatches(usersWithDecks);
 
   console.log("Database seeded successfully");
-  console.log("Created Users:", users);
-  console.log("Created Decks:", decks);
+  // console.log("Created Users:", users);
+  // console.log("Created Decks:", decks);
+  // console.log("Created Matches:", matches);
+
   process.exit();
 };
 

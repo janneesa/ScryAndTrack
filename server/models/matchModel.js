@@ -1,15 +1,28 @@
 const mongoose = require("mongoose");
 
-const matchSchema = new Schema(
+const matchSchema = new mongoose.Schema(
   {
-    players: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    ],
-    decksUsed: { type: Map, of: mongoose.Schema.Types.ObjectId }, // { userId: deckId }
-    winner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    losers: {
+      type: Map,
+      of: mongoose.Schema.Types.ObjectId, // { userId: deckId }
       required: true,
+    },
+    winner: {
+      playerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      deckId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Deck",
+        required: true,
+      },
+    },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
     },
     timestamp: { type: Date, default: Date.now },
   },
