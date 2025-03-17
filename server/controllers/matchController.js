@@ -32,6 +32,62 @@ const createMatch = async (req, res) => {
   }
 };
 
+// @desc Set match status to rejected
+// @route UPDATE /api/matches/:id
+// @access Private
+const rejectMatch = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid match ID" });
+    }
+
+    const match = await Match.findById(id);
+    if (!match) {
+      return res.status(404).json({ error: "Match not found" });
+    }
+
+    if (match.status !== "pending") {
+      return res.status(400).json({
+        error: `Match is not pending anymore. Match status: ${match.status}`,
+      });
+    }
+
+    let isUserAuthorized = false;
+    if (match.winner.playerId === userId) {
+      isUserAuthorized = true;
+    }
+    if (!isUserAuthorized) {
+      for (const playerId of match.losers.keys()) {
+        if (playerId === userId) {
+          isUserAuthorized = true;
+          break;
+        }
+      }
+    }
+
+    if (!isUserAuthorized) {
+      return res
+        .status(403)
+        .json({ error: "User is not authorized to edit this match" });
+    }
+
+    const updatedMatch = { status: "rejected" };
+    Object.assign(match, updatedMatch);
+    const rejectedMatch = await match.save();
+    if (!rejectedMatch) {
+      return res.status(500).json({ error: "Failed to save reject match" });
+    }
+    res.status(200).json(rejectedMatch);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
+  }
+};
+
 // @desc Used by matchApprovalWorker to delete a match by ID
 const deleteMatch = async (id) => {
   try {
@@ -118,4 +174,4 @@ const approveMatch = async (match) => {
   }
 };
 
-module.exports = { createMatch, deleteMatch, approveMatch };
+module.exports = { createMatch, rejectMatch, deleteMatch, approveMatch };

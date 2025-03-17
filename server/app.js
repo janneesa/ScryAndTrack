@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
-//const matchRoutes = require("./routes/matchRoutes");
+const matchRoutes = require("./routes/matchRoutes");
 const deckRoutes = require("./routes/deckRoutes");
 
 const {
@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 
 // Use API Routes
 app.use("/api/users", userRoutes);
-//app.use("/api/matches", matchRoutes);
+app.use("/api/matches", matchRoutes);
 app.use("/api/decks", deckRoutes);
 
 // Error handling middlewares
