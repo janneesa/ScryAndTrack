@@ -1,29 +1,25 @@
 @import "tailwindcss";
 
-* {
-  @apply m-0 p-0;
-}
-
-.primary-bg {
-  @apply bg-[#121212]; /* Dark charcoal background */
-}
-
-.border-color {
-  @apply border-[#2A2A2A]; /* Deep gray for borders */
-}
-
-.text-primary {
-  @apply text-[#EDEDED]; /* Light gray for primary text */
-}
-
-.text-secondary {
-  @apply text-[#B3B3B3]; /* Muted gray for secondary text */
-}
-
-.text-muted {
-  @apply text-[#666666]; /* Dark gray for less important text */
-}
-
 .App {
-  @apply min-h-screen primary-bg text-primary;
+  @apply min-h-screen bg-black;
+}
+
+.App-content {
+  @apply p-4 max-w-6xl mx-auto;
+}
+
+.primary-background {
+  @apply bg-black;
+}
+
+.primary-text {
+  @apply text-white;
+}
+
+.secondary-text {
+  @apply text-gray-400;
+}
+
+.button-white {
+  @apply bg-white text-black px-4 py-2 rounded-lg max-w-fit;
 }
