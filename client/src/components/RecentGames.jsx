@@ -1,4 +1,4 @@
-import Card from "./Card";
+import Card from "./utility/Card";
 import { CalendarDays, Calendar, Trophy, Users } from "lucide-react";
 
 function RecentGames() {

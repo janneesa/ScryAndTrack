@@ -1,4 +1,4 @@
-import Card from "../components/Card";
+import Card from "../components/utility/Card";
 import { Trophy } from "lucide-react";
 
 function Winrate() {

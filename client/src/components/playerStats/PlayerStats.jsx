@@ -1,4 +1,4 @@
-import Card from "../Card";
+import Card from "../utility/Card";
 import { Trophy } from "lucide-react";
 import ColorStats from "./ColorStats";
 import DeckStats from "./DeckStats";

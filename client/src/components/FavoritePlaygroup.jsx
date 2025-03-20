@@ -1,4 +1,4 @@
-import Card from "./Card";
+import Card from "./utility/Card";
 import { Users } from "lucide-react";
 
 function FavoritePlaygroup() {
