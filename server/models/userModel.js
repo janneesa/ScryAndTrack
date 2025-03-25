@@ -14,6 +14,12 @@ const userSchema = new Schema(
       trim: true,
       validate: [validator.isEmail, "Invalid email format"],
     },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
     password: {
       type: String,
       required: true,
@@ -46,8 +52,13 @@ const userSchema = new Schema(
 );
 
 // **Static signup method**
-userSchema.statics.signup = async function (email, password, confirmPassword) {
-  if (!email || !password || !confirmPassword) {
+userSchema.statics.signup = async function (
+  email,
+  username,
+  password,
+  confirmPassword
+) {
+  if (!email || !password || !username || !confirmPassword) {
     throw Error("All fields must be filled");
   }
   if (!validator.isEmail(email)) {
@@ -65,10 +76,15 @@ userSchema.statics.signup = async function (email, password, confirmPassword) {
     throw Error("Email already in use");
   }
 
+  const existingUsername = await this.findOne({ username });
+  if (existingUsername) {
+    throw Error("Username already in use");
+  }
+
   const salt = await bcrypt.genSalt(13);
   const hash = await bcrypt.hash(password, salt);
 
-  const user = await this.create({ email, password: hash });
+  const user = await this.create({ email, username, password: hash });
 
   const userObject = user.toJSON();
   delete userObject.password; // Remove the password field

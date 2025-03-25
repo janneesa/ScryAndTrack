@@ -23,9 +23,9 @@ const clearDatabase = async () => {
 
 const createTestUsers = async () => {
   const users = [
-    { email: "m@example.com", password: "password" },
-    { email: "j@example.com", password: "password" },
-    { email: "s@example.com", password: "password" },
+    { email: "m@example.com", username: "Eren", password: "password" },
+    { email: "j@example.com", username: "Armin", password: "password" },
+    { email: "s@example.com", username: "Mikasa", password: "password" },
   ];
 
   const createdUsers = [];
@@ -34,6 +34,7 @@ const createTestUsers = async () => {
     const hashedPassword = await bcrypt.hash(user.password, 10);
     const newUser = await User.create({
       email: user.email,
+      username: user.username,
       password: hashedPassword,
     });
     createdUsers.push(newUser);
@@ -44,12 +45,36 @@ const createTestUsers = async () => {
 
 const createTestDecks = async (users) => {
   const decks = [
-    { name: "Deck 1", commander: "Commander 1", colors: ["W"] },
-    { name: "Deck 2", commander: "Commander 2", colors: ["U"] },
-    { name: "Deck 3", commander: "Commander 3", colors: ["B"] },
-    { name: "Deck 4", commander: "Commander 4", colors: ["R"] },
-    { name: "Deck 5", commander: "Commander 5", colors: ["G"] },
-    { name: "Deck 6", commander: "Commander 6", colors: ["W", "U"] },
+    {
+      name: "Sauron's Army",
+      commander: "Sauron, the Dark Lord",
+      colors: ["U", "B", "R"],
+    },
+    {
+      name: "Vampires of Innistrad",
+      commander: "Edgar Markov",
+      colors: ["W", "B", "R"],
+    },
+    {
+      name: "Elves of Llanowar",
+      commander: "Freyalise, Llanowar's Fury",
+      colors: ["G"],
+    },
+    {
+      name: "Goblins of Krenko",
+      commander: "Krenko, Mob Boss",
+      colors: ["R"],
+    },
+    {
+      name: "Dragons of Tarkir",
+      commander: "The Ur-Dragon",
+      colors: ["W", "U", "B", "R", "G"],
+    },
+    {
+      name: "Horror",
+      commander: "Atraxa, Praetors' Voice",
+      colors: ["W", "U", "B", "G"],
+    },
   ];
 
   const createdDecks = [];

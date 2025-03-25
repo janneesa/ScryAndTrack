@@ -13,11 +13,11 @@ const generateToken = (_id) => {
 // @route   POST /api/users/signup
 // @access  Public
 const createUser = async (req, res) => {
-  const { email, password, confirmPassword } = req.body;
+  const { email, username, password, confirmPassword } = req.body;
 
   try {
     // Custom signup method in the User model
-    const user = await User.signup(email, password, confirmPassword);
+    const user = await User.signup(email, username, password, confirmPassword);
 
     if (user) {
       const token = generateToken(user.id);
