@@ -68,8 +68,8 @@ function RecentGame({ game }) {
             <span className="flex items-center">
               <Trophy className="mr-1 h-4 w-4" />
               Winner:{" "}
-              {game?.winner.playerId.email
-                ? game?.winner.playerId.email
+              {game?.winner.playerId.username
+                ? game?.winner.playerId.username
                 : "Player missing"}
             </span>
             <span className="flex items-center">
