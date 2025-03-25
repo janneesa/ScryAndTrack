@@ -51,7 +51,7 @@ function RecentGame({ game }) {
   return (
     <div className="primary-background rounded-md border-gray-800 border flex">
       <div className="border border-gray-800 rounded-full my-auto px-4 py-2 ml-2 max-h-fit flex items-center justify-center w-12 h-12">
-        <p className="text-4xl primary-text mb-1">
+        <p className="text-3xl primary-text mb-1">
           {game?.winner.deckId.name ? game?.winner.deckId.name[0] : "?"}
         </p>
       </div>
