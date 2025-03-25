@@ -1,7 +1,11 @@
+import { useContext } from "react";
 import Card from "../components/utility/Card";
+import { UserContext } from "../context/UserContext";
 import { Trophy } from "lucide-react";
 
 function Winrate() {
+  const { user } = useContext(UserContext);
+
   return (
     <Card>
       <h2 className="primary-text flex font-semibold text-md">
@@ -11,8 +15,10 @@ function Winrate() {
         Winrate
       </h2>
       <p className="secondary-text text-sm">Your performance</p>
-      <p className="primary-text text-xl font-bold">42%</p>
-      <p className="secondary-text text-sm">Based on all 20 games</p>
+      <p className="primary-text text-xl font-bold">{user?.winRate}%</p>
+      <p className="secondary-text text-sm">
+        Based on all {user?.gamesPlayed} games
+      </p>
     </Card>
   );
 }

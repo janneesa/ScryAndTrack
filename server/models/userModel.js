@@ -82,7 +82,19 @@ userSchema.statics.login = async function (email, password) {
     throw Error("Email and password are required");
   }
 
-  const user = await this.findOne({ email }).select("+password");
+  const user = await this.findOne({ email })
+    .select("+password")
+    .populate("decks")
+    .populate({
+      path: "matchHistory",
+      populate: [
+        { path: "winner.playerId", model: "User" },
+        { path: "winner.deckId", model: "Deck" },
+        { path: "losers", model: "User" },
+        { path: "losers", model: "Deck" },
+      ],
+    })
+    .populate("mostPlayedDeck");
   if (!user) {
     throw Error("Incorrect email");
   }
