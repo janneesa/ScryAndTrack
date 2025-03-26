@@ -5,7 +5,7 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const matchRoutes = require("./routes/matchRoutes");
 const deckRoutes = require("./routes/deckRoutes");
-
+const PlaygroupRoutes = require("./routes/playgroupRoutes");
 const {
   unknownEndpoint,
   errorHandler,
@@ -33,6 +33,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/matches", matchRoutes);
 app.use("/api/decks", deckRoutes);
+app.use("/api/playgroups", PlaygroupRoutes);
 
 // Error handling middlewares
 app.use(unknownEndpoint);
