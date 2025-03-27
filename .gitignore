@@ -1,4 +1,4 @@
 node_modules
 .env
 seedDatabase.js
-utils/seedDatabase.js
+server/utils/seedDatabase.js
