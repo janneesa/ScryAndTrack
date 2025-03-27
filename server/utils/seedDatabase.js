@@ -8,9 +8,7 @@ const bcrypt = require("bcryptjs");
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://ensiojanne:ZIN4Cw15KhOAD9xg@scryandtracktestcluster.zprys.mongodb.net/?retryWrites=true&w=majority&appName=ScryAndTrackTestCluster"
-    );
+    await mongoose.connect("");
     console.log("MongoDB connected");
   } catch (error) {
     console.error("MongoDB connection failed:", error.message);
