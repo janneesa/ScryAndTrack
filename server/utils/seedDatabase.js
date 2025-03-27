@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(" ");
+    await mongoose.connect("");
     console.log("MongoDB connected");
   } catch (error) {
     console.error("MongoDB connection failed:", error.message);
@@ -157,6 +157,12 @@ const createTestPlaygroups = async (users) => {
   return [planeswalkerit, matang];
 };
 
+const addFriends = async (users) => {
+  users[0].friends.push(users[1]._id);
+  users[0].friends.push(users[2]._id);
+  await users[0].save();
+};
+
 const seedDatabase = async () => {
   await connectDB();
   await clearDatabase();
@@ -167,6 +173,7 @@ const seedDatabase = async () => {
   const usersWithDecks = await User.find({});
   await createTestMatches(usersWithDecks);
   await createTestPlaygroups(usersWithDecks);
+  await addFriends(usersWithDecks);
 
   console.log("Database seeded successfully");
   // console.log("Created Users:", users);
