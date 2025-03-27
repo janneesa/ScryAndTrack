@@ -111,7 +111,9 @@ userSchema.statics.login = async function (email, password) {
         { path: "losers", model: "Deck" },
       ],
     })
-    .populate("mostPlayedDeck");
+    .populate("mostPlayedDeck")
+    .populate("friends")
+    .populate("playgroups");
   if (!user) {
     throw Error("Incorrect email");
   }
