@@ -15,13 +15,28 @@ const {
 // @access Private
 const createMatch = async (req, res) => {
   try {
-    const { playerDecks, winner } = req.body;
+    const { losers, winner } = req.body;
 
-    // Create a new match
-    const match = new Match({
-      playerDecks,
-      winner,
-    });
+    if (!losers || !winner) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    let match;
+
+    // Check if body has playgroup id
+    if (req.body.playgroup) {
+      const playgroupId = req.body.playgroup;
+      match = new Match({
+        losers,
+        winner,
+        playgroup: playgroupId,
+      });
+    } else {
+      match = new Match({
+        losers,
+        winner,
+      });
+    }
 
     await match.save();
     res.status(201).json(match);
