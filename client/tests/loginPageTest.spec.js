@@ -1,15 +1,23 @@
 import { test, expect } from "@playwright/test";
 
-test("test", async ({ page }) => {
-  await page.goto("http://localhost:3000/login");
-  await page.getByRole("navigation").click();
-  await page.getByRole("link", { name: "Scry&Track" }).click();
-  await page.getByRole("link", { name: "Signup" }).click();
-  await page.getByRole("link", { name: "Login" }).click();
-  await page.getByRole("heading", { name: "Login" }).click();
-  await page.getByText("Email address:").click();
-  await page.locator('input[type="email"]').click();
-  await page.getByText("Password:").click();
-  await page.locator('input[type="password"]').click();
-  await page.getByRole("button", { name: "Login" }).click();
+test.describe("Login Page Tests", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("http://localhost:3000/login");
+  });
+
+  test("should render the login page with necessary elements", async ({
+    page,
+  }) => {
+    await expect(page.getByRole("button", { name: "Login" })).toBeVisible();
+    await expect(page.locator("label:text('Email address:')")).toBeVisible();
+    await expect(page.locator("label:text('Password:')")).toBeVisible();
+    await expect(page.locator("button:text('Login')")).toBeVisible();
+  });
+
+  test("should show error for empty email and password", async ({ page }) => {
+    await page.click("button:text('Login')");
+    await expect(
+      page.locator("text=Email and password are required")
+    ).toBeVisible();
+  });
 });
