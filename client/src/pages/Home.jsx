@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import FavoriteDeck from "../components/FavoriteDeck";
 import FavoritePlaygroup from "../components/FavoritePlaygroup";
 import RecentGames from "../components/RecentGames";
@@ -5,10 +6,18 @@ import Winrate from "../components/Winrate";
 import PlayerStats from "../components/playerStats/PlayerStats";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const navigateToNewGame = () => {
+    navigate("/newGame");
+  };
+
   return (
     <div className="">
       <div className="flex justify-center mb-4">
-        <button className="button-white">Create New Game</button>
+        <button onClick={navigateToNewGame} className="button-white">
+          Create New Game
+        </button>
       </div>
 
       {/* Quick Stats */}
