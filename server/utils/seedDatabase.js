@@ -3,11 +3,14 @@ const mongoose = require("mongoose");
 const User = require("../models/userModel");
 const Deck = require("../models/deckModel");
 const Match = require("../models/matchModel");
+const Playgroup = require("../models/playgroupModel");
 const bcrypt = require("bcryptjs");
 
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/scry-and-track-local");
+    await mongoose.connect(
+      "mongodb+srv://ensiojanne:ZIN4Cw15KhOAD9xg@scryandtracktestcluster.zprys.mongodb.net/?retryWrites=true&w=majority&appName=ScryAndTrackTestCluster"
+    );
     console.log("MongoDB connected");
   } catch (error) {
     console.error("MongoDB connection failed:", error.message);
@@ -19,6 +22,8 @@ const clearDatabase = async () => {
   await User.deleteMany({});
   await Deck.deleteMany({});
   await Match.deleteMany({});
+  await Playgroup.deleteMany({});
+  console.log("Database cleared");
 };
 
 const createTestUsers = async () => {
@@ -131,6 +136,29 @@ const createTestMatches = async (users) => {
   return createdMatches;
 };
 
+const createTestPlaygroups = async (users) => {
+  const planeswalkerit = await Playgroup.create({
+    name: "Perjantai Planeswalkerit",
+    admin: users[0].id,
+    members: [users[0].id, users[1].id],
+  });
+
+  const matang = await Playgroup.create({
+    name: "Mätäng Emännyys",
+    admin: users[1].id,
+    members: [users[1].id, users[0].id],
+  });
+
+  users[0].playgroups.push(planeswalkerit._id);
+  users[1].playgroups.push(planeswalkerit._id);
+  users[1].playgroups.push(matang._id);
+  users[0].playgroups.push(matang._id);
+  await users[0].save();
+  await users[1].save();
+
+  return [planeswalkerit, matang];
+};
+
 const seedDatabase = async () => {
   await connectDB();
   await clearDatabase();
@@ -140,6 +168,7 @@ const seedDatabase = async () => {
   await createTestDecks(users);
   const usersWithDecks = await User.find({});
   await createTestMatches(usersWithDecks);
+  await createTestPlaygroups(usersWithDecks);
 
   console.log("Database seeded successfully");
   // console.log("Created Users:", users);

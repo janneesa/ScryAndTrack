@@ -28,6 +28,7 @@ const userSchema = new Schema(
     decks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Deck" }], // List of deck IDs
     matchHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Match" }], // List of match IDs
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // List of friend IDs
+    playgroups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Playgroup" }], // List of playgroup
     gamesPlayed: { type: Number, default: 0 },
     gamesWon: { type: Number, default: 0 },
     mostPlayedDeck: {
