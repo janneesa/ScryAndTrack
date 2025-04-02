@@ -1,8 +1,9 @@
 function ColorStats() {
   return (
+    // TODO: Add color stats
     <div className="flex flex-col">
-      <p className="primary-text font-semibold mb-1">Color preference</p>
-      <p className="secondary-text text-sm mb-4">
+      <p className="primary-text mb-1">Color preference</p>
+      <p className="secondary-text mb-4">
         Color distribuition between all decks
       </p>
       <div className="flex justify-around">

@@ -17,11 +17,23 @@ input {
 }
 
 .primary-text {
-  @apply text-white;
+  @apply text-white text-sm;
+}
+
+.primary-header {
+  @apply text-white text-xl font-semibold;
 }
 
 .secondary-text {
-  @apply text-gray-400;
+  @apply text-gray-400 text-sm;
+}
+
+.secondary-header {
+  @apply text-white font-semibold;
+}
+
+.primary-border {
+  @apply border border-gray-800;
 }
 
 .button {

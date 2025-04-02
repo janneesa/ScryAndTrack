@@ -9,7 +9,7 @@ function NewGame() {
     <div className="max-w-3xl mx-auto">
       <Card>
         {/* Title */}
-        <h2 className="primary-text flex text-xl font-semibold">
+        <h2 className="primary-header flex">
           <span className="flex items-center">
             <Gamepad2 className="mr-2 primary-text" />
             Game Details
@@ -42,13 +42,13 @@ function NewGame() {
           <label className="primary-text text-sm font-semibold">
             Game Type
           </label>
-          <div className="mt-2 flex p-2 rounded-l-md border bg-gray-900">
+          <div className="mt-2 flex p-1.5 rounded-l-md border bg-zinc-700 max-h-12">
             <button
               onClick={() => setGameType("free")}
               className={`flex items-center justify-center w-1/2 rounded-md ${
                 gameType === "free"
                   ? "primary-background primary-text"
-                  : "bg-gray-900 secondary-text"
+                  : "bg-zinc-700 secondary-text"
               }`}
             >
               <UserPlus className="mr-2 h-5 w-5" />
@@ -59,7 +59,7 @@ function NewGame() {
               className={`flex items-center justify-center w-1/2 p-3 rounded-md ${
                 gameType === "playgroup"
                   ? "primary-background primary-text"
-                  : "bg-gray-900 secondary-text"
+                  : "bg-zinc-700 secondary-text"
               }`}
             >
               <Users className="mr-2 h-5 w-5" />

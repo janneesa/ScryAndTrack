@@ -10,12 +10,12 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="items-center primary-background py-4 px-6 text-white border-b border-gray-800">
+    <nav className="items-center primary-background py-4 px-6 border-b border-gray-800">
       <div className="max-w-5xl flex justify-between items-center mx-auto">
-        <h1 className="text-xl font-bold">
+        <h1 className="primary-header">
           <Link to="/">Scry&Track</Link>
         </h1>
-        <ul className="flex gap-4">
+        <ul className="primary-text flex gap-4">
           {user ? (
             <>
               <li>
