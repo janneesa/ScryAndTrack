@@ -15,7 +15,7 @@ function NewGame() {
             Game Details
           </span>
         </h2>
-        <p className="secondary-text text-sm">
+        <p className="secondary-text">
           Set the basic information about your Commander game
         </p>
 
@@ -25,30 +25,28 @@ function NewGame() {
             <label className="primary-text mb-1">Game Date</label>
             <input
               type="date"
-              className="p-2 rounded-md border border-gray-700 focus:outline-none"
+              className="p-2 rounded-md primary-border focus:outline-none"
             />
           </div>
           <div className="flex flex-col w-1/2">
             <label className="primary-text mb-1">Game Duration</label>
             <input
               type="time"
-              className="p-2 rounded-md border border-gray-700 focus:outline-none"
+              className="p-2 rounded-md primary-border focus:outline-none"
             />
           </div>
         </div>
 
         {/* Game Type Selection */}
         <div className="mt-2">
-          <label className="primary-text text-sm font-semibold">
-            Game Type
-          </label>
-          <div className="mt-2 flex p-1.5 rounded-l-md border bg-zinc-700 max-h-12">
+          <label className="primary-text">Game Type</label>
+          <div className="mt-2 flex px-1.5 py-1 rounded-l-md primary-border secondary-background max-h-10">
             <button
               onClick={() => setGameType("free")}
               className={`flex items-center justify-center w-1/2 rounded-md ${
                 gameType === "free"
                   ? "primary-background primary-text"
-                  : "bg-zinc-700 secondary-text"
+                  : "secondary-background secondary-text"
               }`}
             >
               <UserPlus className="mr-2 h-5 w-5" />
@@ -59,16 +57,22 @@ function NewGame() {
               className={`flex items-center justify-center w-1/2 p-3 rounded-md ${
                 gameType === "playgroup"
                   ? "primary-background primary-text"
-                  : "bg-zinc-700 secondary-text"
+                  : "secondary-background secondary-text"
               }`}
             >
               <Users className="mr-2 h-5 w-5" />
               Playgroup Game
             </button>
           </div>
-          <p className="secondary-text text-xs mt-2">
-            Create a game with any of your friends, regardless of playgroup.
-          </p>
+          {gameType === "free" ? (
+            <p className="secondary-text mt-2">
+              Create a game with any of your friends, regardless of playgroup.
+            </p>
+          ) : (
+            <p className="secondary-text mt-2">
+              Create a game with your playgroup members only.
+            </p>
+          )}
         </div>
       </Card>
     </div>
