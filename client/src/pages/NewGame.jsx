@@ -1,9 +1,18 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Gamepad2, Users, UserPlus } from "lucide-react";
+import { UserContext } from "../context/UserContext";
 import Card from "../components/utility/Card";
 
 function NewGame() {
+  const { user } = useContext(UserContext);
   const [gameType, setGameType] = useState("free");
+  const [players, setPlayers] = useState([]);
+
+  useEffect(() => {
+    if (gameType === "free") {
+      setPlayers(user?.friends || []);
+    }
+  }, [gameType]);
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -88,47 +97,40 @@ function NewGame() {
         <p className="secondary-header">Winner</p>
         <div className="flex gap-4 justify-center">
           <div className="flex flex-col w-full">
-            <label className="primary-text mb-1">Player</label>
-            <select name="" id="">
-              <option value="">Select Player</option>
-              <option value="">Player 1</option>
-              <option value="">Player 2</option>
-              <option value="">Player 3</option>
-            </select>
-          </div>
-          <div className="flex flex-col w-full">
-            <label className="primary-text mb-1">Deck</label>
-            <select name="" id="">
-              <option value="">Select Deck</option>
-              <option value="">Player 1</option>
-              <option value="">Player 2</option>
-              <option value="">Player 3</option>
-            </select>
+            <PlayerSelector players={players} />
           </div>
         </div>
         <div className="w-full h-0.5 bg-zinc-800 mb-2 mt-2"></div>
         <p className="secondary-header">Other Players</p>
-        <div className="flex gap-4 justify-center">
-          <div className="flex flex-col w-full">
-            <label className="primary-text mb-1">Player</label>
-            <select name="" id="">
-              <option value="">Select Player</option>
-              <option value="">Player 1</option>
-              <option value="">Player 2</option>
-              <option value="">Player 3</option>
-            </select>
-          </div>
-          <div className="flex flex-col w-full">
-            <label className="primary-text mb-1">Deck</label>
-            <select name="" id="">
-              <option value="">Select Deck</option>
-              <option value="">Player 1</option>
-              <option value="">Player 2</option>
-              <option value="">Player 3</option>
-            </select>
-          </div>
-        </div>
+        <PlayerSelector players={players} />
+        <PlayerSelector players={players} />
       </Card>
+    </div>
+  );
+}
+
+function PlayerSelector({ players }) {
+  return (
+    <div className="flex gap-4 justify-center">
+      <div className="flex flex-col w-full">
+        <label className="primary-text mb-1">Player</label>
+        <select>
+          {players?.map((player) => (
+            <option value={player.id} key={player.id}>
+              {player.username}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="flex flex-col w-full">
+        <label className="primary-text mb-1">Deck</label>
+        <select name="" id="">
+          <option value="">Select Deck</option>
+          <option value="">Player 1</option>
+          <option value="">Player 2</option>
+          <option value="">Player 3</option>
+        </select>
+      </div>
     </div>
   );
 }
