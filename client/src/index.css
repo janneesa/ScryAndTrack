@@ -1,7 +1,15 @@
 @import "tailwindcss";
 
 input {
-  @apply w-full px-2 py-2 border border-gray-800 rounded-lg;
+  @apply w-full px-2 py-2 border border-zinc-800 rounded-lg;
+}
+
+select {
+  @apply w-full px-2 py-2 border text-white border-zinc-800 rounded-lg;
+}
+
+option {
+  @apply bg-black text-white hover:bg-zinc-800;
 }
 
 .App {

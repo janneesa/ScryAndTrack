@@ -13,7 +13,7 @@ function PlayerStats() {
         Player Stats
       </h2>
       <ColorStats />
-      <div className="w-full h-0.5 bg-gray-800 mb-2 mt-2"></div>
+      <div className="w-full h-0.5 bg-gray-zinc mb-2 mt-2"></div>
       <DeckStats />
     </Card>
   );
