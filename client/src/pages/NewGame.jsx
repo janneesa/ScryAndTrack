@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { Gamepad2, Users, UserPlus } from "lucide-react";
+import { Gamepad2, Users, UserPlus, Trash2, Save } from "lucide-react";
 import { UserContext } from "../context/UserContext";
+import toast from "react-hot-toast";
 import useFetchAny from "../hooks/useFetchAny";
 import Card from "../components/utility/Card";
 
 function NewGame() {
-  const { fetchFunction, error } = useFetchAny();
+  const { fetchFunction, isLoading, error } = useFetchAny();
   const { user } = useContext(UserContext);
 
   const [gameType, setGameType] = useState("free");
@@ -22,9 +23,17 @@ function NewGame() {
   useEffect(() => {
     if (gameType === "free") {
       setPlaygroup("");
+      setWinner({ playerId: "", deckId: "" });
+      setLosers([{ playerId: "", deckId: "" }]);
       setPlayers(user?.friends || []);
     } else if (gameType === "playgroup" && playgroup) {
+      setWinner({ playerId: "", deckId: "" });
+      setLosers([{ playerId: "", deckId: "" }]);
       fetchPlaygroupPlayers();
+    } else {
+      setWinner({ playerId: "", deckId: "" });
+      setLosers([{ playerId: "", deckId: "" }]);
+      setPlayers([]);
     }
   }, [gameType, playgroup, user]);
 
@@ -51,6 +60,17 @@ function NewGame() {
     setLosers(updated);
   };
 
+  const removeLoser = (indexToRemove) => {
+    // Don't allow deleting if only one loser remains
+    if (losers.length === 1) {
+      toast.error("At least 2 players is required.");
+      return;
+    }
+
+    const updated = losers.filter((_, index) => index !== indexToRemove);
+    setLosers(updated);
+  };
+
   const handleSaveGame = async () => {
     const losersMap = losers.reduce((acc, loser) => {
       if (loser.playerId && loser.deckId) {
@@ -66,14 +86,22 @@ function NewGame() {
     };
 
     try {
-      const savedMatch = await fetchFunction("/api/matches", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify(gameData),
-      });
+      const savedMatch = await toast.promise(
+        fetchFunction("/api/matches", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify(gameData),
+        }),
+        {
+          loading: "Saving game...",
+          success: "Game is now pending for 24h!",
+          error: (err) =>
+            err?.data?.error || err.message || "Something went wrong",
+        }
+      );
 
       console.log("Game save response:", savedMatch);
 
@@ -96,8 +124,6 @@ function NewGame() {
         <p className="secondary-text">
           Set the basic information about your Commander game
         </p>
-
-        <GameMetaForm />
 
         <GameTypeSelector
           gameType={gameType}
@@ -130,6 +156,7 @@ function NewGame() {
         <div className="flex justify-between items-center">
           <p className="secondary-header">Other Players</p>
           <button onClick={addLoser} className="button primary-text">
+            <UserPlus className="mr-2 h-5 w-5" />
             Add player
           </button>
         </div>
@@ -143,37 +170,35 @@ function NewGame() {
               onSelectionChange={(playerId, deckId) =>
                 updateLoser(index, playerId, deckId)
               }
+              onDelete={() => removeLoser(index)} // optional prop for delete action
+              isDeletable={losers.length > 1} // only allow delete if more than one loser
             />
           </div>
         ))}
 
         <div className="flex justify-center my-2">
-          <button onClick={handleSaveGame} className="button-white">
-            Save Game
+          <button
+            onClick={handleSaveGame}
+            disabled={
+              !winner.playerId ||
+              !winner.deckId ||
+              !losers.every((loser) => loser.playerId && loser.deckId) ||
+              isLoading
+            }
+            className={
+              !winner.playerId ||
+              !winner.deckId ||
+              !losers.every((loser) => loser.playerId && loser.deckId) ||
+              isLoading
+                ? "button-disabled"
+                : "button-white"
+            }
+          >
+            <Save className="mr-2 h-5 w-5" />
+            {isLoading ? "Saving..." : "Save Game"}
           </button>
         </div>
       </Card>
-    </div>
-  );
-}
-
-function GameMetaForm() {
-  return (
-    <div className="mt-2 flex gap-4 primary-text">
-      <div className="flex flex-col w-1/2">
-        <label className="primary-text mb-1">Game Date</label>
-        <input
-          type="date"
-          className="p-2 rounded-md primary-border focus:outline-none"
-        />
-      </div>
-      <div className="flex flex-col w-1/2">
-        <label className="primary-text mb-1">Game Duration</label>
-        <input
-          type="time"
-          className="p-2 rounded-md primary-border focus:outline-none"
-        />
-      </div>
     </div>
   );
 }
@@ -224,7 +249,7 @@ function GameTypeSelector({
             >
               <option value="">Select playgroup</option>
               {playgroups?.map((group) => (
-                <option value={group._id} key={group._id}>
+                <option value={group.id} key={group.id}>
                   {group.name}
                 </option>
               ))}
@@ -247,9 +272,11 @@ function PlayerSelector({
   selectedPlayer,
   selectedDeck,
   onSelectionChange,
+  onDelete,
+  isDeletable = false,
 }) {
   const { user } = useContext(UserContext);
-  const { fetchFunction } = useFetchAny();
+  const { fetchFunction, isLoading } = useFetchAny();
   const [decks, setDecks] = useState([]);
 
   useEffect(() => {
@@ -268,9 +295,9 @@ function PlayerSelector({
           },
         }
       );
+
       setDecks(fetchedDecks);
     };
-
     fetchDecks();
   }, [selectedPlayer]);
 
@@ -296,28 +323,42 @@ function PlayerSelector({
           <option value={user.id} key={user.id}>
             {user.username} (you)
           </option>
-          {players?.map((player) => (
-            <option value={player.id} key={player.id}>
-              {player.username}
-            </option>
-          ))}
+          {players?.map(
+            (player) =>
+              player.id !== user.id && (
+                <option value={player.id} key={player.id}>
+                  {player.username}
+                </option>
+              )
+          )}
         </select>
       </div>
       <div className="flex flex-col w-full">
         <label className="primary-text mb-1">Deck</label>
-        <select
-          className="p-2 rounded-md primary-border"
-          onChange={handleDeckChange}
-          value={selectedDeck}
-          disabled={!decks.length}
-        >
-          <option value="">Select deck</option>
-          {decks?.map((deck) => (
-            <option value={deck.id} key={deck.id}>
-              {deck.name}
-            </option>
-          ))}
-        </select>
+        <div className="flex gap-2 items-center">
+          <select
+            className="p-2 rounded-md primary-border"
+            onChange={handleDeckChange}
+            value={selectedDeck}
+            disabled={!decks.length}
+          >
+            <option value="">{isLoading ? "loading..." : "Select deck"}</option>
+            {decks?.map((deck) => (
+              <option value={deck.id} key={deck.id}>
+                {deck.name}
+              </option>
+            ))}
+          </select>
+
+          {isDeletable && (
+            <button
+              className="p-2 text-red-600 border cursor-pointer border-zinc-800 rounded-lg"
+              onClick={onDelete}
+            >
+              <Trash2 className="h-5 w-5" />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

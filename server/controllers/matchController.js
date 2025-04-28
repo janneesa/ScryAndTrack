@@ -17,8 +17,20 @@ const createMatch = async (req, res) => {
   try {
     const { losers, winner, playgroup } = req.body;
 
-    if (!losers || !winner) {
-      return res.status(400).json({ error: "Missing required fields" });
+    if (!winner || typeof winner !== "object") {
+      return res.status(400).json({ error: "Winner must be provided" });
+    }
+
+    if (!winner.playerId || !mongoose.Types.ObjectId.isValid(winner.playerId)) {
+      return res.status(400).json({ error: "Invalid winner ID" });
+    }
+
+    if (!winner.deckId || !mongoose.Types.ObjectId.isValid(winner.deckId)) {
+      return res.status(400).json({ error: "Invalid winner deck ID" });
+    }
+
+    if (!losers || losers.length === 0) {
+      return res.status(400).json({ error: "At least 2 players is required" });
     }
 
     const matchData = {
@@ -36,7 +48,7 @@ const createMatch = async (req, res) => {
     res.status(201).json(match);
   } catch (error) {
     res.status(500).json({
-      error: "Internal Server Error",
+      error: "Internal Server Errors",
       details: error.message,
     });
   }

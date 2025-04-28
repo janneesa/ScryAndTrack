@@ -213,6 +213,10 @@ const createTestPlaygroups = async (users) => {
   users[2].playgroups.push(matang._id);
   await users[0].save();
   await users[1].save();
+  await users[2].save();
+  await users[3].save();
+  await users[4].save();
+  await users[5].save();
 
   return [planeswalkerit, matang];
 };

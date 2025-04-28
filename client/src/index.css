@@ -49,19 +49,23 @@ option {
 }
 
 .button {
-  @apply px-4 py-2 border cursor-pointer border-zinc-800 rounded-lg shadow-md font-semibold hover:bg-gray-800 hover:scale-105 transition;
+  @apply px-4 py-2 flex items-center justify-center border cursor-pointer border-zinc-800 rounded-lg shadow-md font-semibold hover:bg-zinc-800 hover:scale-105 transition;
 }
 
 .button-secondary {
-  @apply px-4 py-2 rounded-lg shadow-md font-semibold hover:bg-gray-200 hover:scale-105 transition;
+  @apply px-4 py-2 flex items-center justify-center rounded-lg shadow-md font-semibold hover:bg-gray-200 hover:scale-105 transition;
 }
 
 .button-check {
-  @apply px-4 py-2 rounded-lg shadow-md hover:border-zinc-800 hover:scale-105 transition;
+  @apply px-4 py-2 flex items-center justify-center rounded-lg shadow-md hover:border-zinc-800 hover:scale-105 transition;
 }
 
 .button-white {
-  @apply bg-white text-black px-4 py-2 cursor-pointer rounded-lg max-w-fit hover:scale-105 transition;
+  @apply bg-white flex items-center justify-center text-black px-4 py-2 cursor-pointer rounded-lg max-w-fit hover:scale-105 transition;
+}
+
+.button-disabled {
+  @apply bg-zinc-800 flex items-center justify-center text-gray-400 px-4 py-2 cursor-not-allowed rounded-lg max-w-fit;
 }
 
 .link {
