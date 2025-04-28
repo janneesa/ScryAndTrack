@@ -15,35 +15,30 @@ const {
 // @access Private
 const createMatch = async (req, res) => {
   try {
-    const { losers, winner } = req.body;
+    const { losers, winner, playgroup } = req.body;
 
     if (!losers || !winner) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    let match;
+    const matchData = {
+      losers,
+      winner,
+    };
 
-    // Check if body has playgroup id
-    if (req.body.playgroup) {
-      const playgroupId = req.body.playgroup;
-      match = new Match({
-        losers,
-        winner,
-        playgroup: playgroupId,
-      });
-    } else {
-      match = new Match({
-        losers,
-        winner,
-      });
+    if (playgroup !== "") {
+      matchData.playgroup = playgroup;
     }
+
+    const match = new Match(matchData);
 
     await match.save();
     res.status(201).json(match);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Internal Server Error", details: error.message });
+    res.status(500).json({
+      error: "Internal Server Error",
+      details: error.message,
+    });
   }
 };
 
