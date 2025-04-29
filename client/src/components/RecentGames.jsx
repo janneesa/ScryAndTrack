@@ -1,10 +1,29 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import Card from "./utility/Card";
+import WinLabel from "./utility/WinLabel";
+import useFetchAny from "../hooks/useFetchAny";
 import { CalendarDays, Calendar, Trophy, Users } from "lucide-react";
 
 function RecentGames() {
   const { user } = useContext(UserContext);
+  const { fetchFunction, isLoading, error } = useFetchAny();
+  const [recentMatches, setRecentMatches] = useState([]);
+
+  useEffect(() => {
+    if (user) {
+      const fetchMatches = async () => {
+        const fetchedGames = await fetchFunction(`/api/matches/recent`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+        setRecentMatches(fetchedGames);
+      };
+      fetchMatches();
+    }
+  }, [user]);
 
   return (
     <Card>
@@ -19,7 +38,7 @@ function RecentGames() {
         {user ? (
           <>
             {user.matchHistory.length > 0 ? (
-              user.matchHistory.map((game, index) => (
+              recentMatches.map((game, index) => (
                 <RecentGame game={game} key={index} />
               ))
             ) : (
@@ -58,12 +77,19 @@ function RecentGame({ game }) {
         </div>
         <div>
           <div className="flex flex-col gap-1 p-1">
-            <div>
+            <div className="flex gap-4">
               <p className="primary-text">
                 {game?.winner.deckId.name
                   ? game?.winner.deckId.name
                   : "Deck missing"}
               </p>
+              <WinLabel
+                condition={
+                  game?.winner.playerId.username === user.username
+                    ? true
+                    : false
+                }
+              />
             </div>
             <div className="secondary-text flex flex-wrap gap-x-4 gap-y-1">
               <span className="flex items-center">
@@ -83,14 +109,16 @@ function RecentGame({ game }) {
               <span className="flex items-center">
                 <CalendarDays className="mr-1 h-4 w-4" />
                 <p>
-                  {game?.timestamp
-                    ? formatDate(game.timestamp)
+                  {game?.createdAt
+                    ? formatDate(game.createdAt)
                     : "Timestamp missing"}
                 </p>
               </span>
             </div>
             {/* TODO get the possible name of the playgroup */}
-            <p className="secondary-text">Perjantai Planeswalkerit</p>
+            <p className="secondary-text">
+              {game?.playgroup?.name ? game?.playgroup?.name : "Free game"}
+            </p>
           </div>
         </div>
       </div>

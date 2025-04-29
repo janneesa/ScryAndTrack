@@ -91,4 +91,31 @@ const getPlaygroupPlayers = async (req, res) => {
   }
 };
 
-module.exports = { createPlaygroup, addMember, getPlaygroupPlayers };
+// @desc Used by matchApprovalWorker to add match to playgroups match history
+const addMatchToPlaygroupHistory = async (playgroupId, matchId, session) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(playgroupId)) {
+      throw new Error("Invalid playgroup ID");
+    }
+
+    const playgroup = await Playgroup.findById(playgroupId).session(session);
+    if (!playgroup) {
+      throw new Error("Playgroup not found");
+    }
+
+    playgroup.matchHistory.push(matchId);
+    const updatedPlaygroup = await playgroup.save({ session });
+    return updatedPlaygroup;
+  } catch (error) {
+    throw new Error(
+      `Failed to add match to playgroup history: ${error.message}`
+    );
+  }
+};
+
+module.exports = {
+  createPlaygroup,
+  addMember,
+  getPlaygroupPlayers,
+  addMatchToPlaygroupHistory,
+};

@@ -9,6 +9,9 @@ const {
   updateWinnerDeckStats,
   updateLoserDeckStats,
 } = require("../controllers/deckController");
+const {
+  addMatchToPlaygroupHistory,
+} = require("../controllers/playgroupController");
 
 // @desc Create a new match
 // @route POST /api/matches
@@ -174,6 +177,18 @@ const approveMatch = async (match) => {
       throw new Error("Failed to update most used deck");
     }
 
+    // if match was a playgroup match, update playgroup match history
+    if (match.playgroup) {
+      const playgroupUpdated = await addMatchToPlaygroupHistory(
+        match.playgroup,
+        match._id,
+        session
+      );
+      if (!playgroupUpdated) {
+        throw new Error("Failed to update playgroup match history");
+      }
+    }
+
     // Update match status
     match.status = "approved";
     Object.assign(match, { status: "approved" });
@@ -196,4 +211,65 @@ const approveMatch = async (match) => {
   }
 };
 
-module.exports = { createMatch, rejectMatch, deleteMatch, approveMatch };
+// @desc Get players recent matches
+// @route GET /api/matches/recent/:id
+// @access Private
+const getPlayerRecentMatches = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    const matches = await Match.find({
+      $or: [
+        { "winner.playerId": userId },
+        { [`losers.${userId}`]: { $exists: true } }, // Check if userId exists as a key in the losers map
+      ],
+    })
+      .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+      .limit(5)
+      .populate({
+        path: "winner.playerId",
+        model: "User",
+      })
+      .populate({
+        path: "winner.deckId",
+        model: "Deck",
+      })
+      .populate({
+        path: "losers",
+        populate: [
+          {
+            path: "playerId",
+            model: "User",
+          },
+          {
+            path: "deckId",
+            model: "Deck",
+          },
+        ],
+      })
+      .populate({
+        path: "playgroup",
+        model: "Playgroup",
+      });
+
+    res.status(200).json(matches);
+  } catch (error) {
+    console.error("Error fetching recent matches:", error);
+    res.status(500).json({
+      error: "Internal Server Error",
+      details: error.message,
+    });
+  }
+};
+
+module.exports = {
+  createMatch,
+  rejectMatch,
+  deleteMatch,
+  approveMatch,
+  getPlayerRecentMatches,
+};
