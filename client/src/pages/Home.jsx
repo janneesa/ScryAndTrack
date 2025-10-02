@@ -32,7 +32,7 @@ const Home = () => {
         <RecentGames />
         <PlayerStats />
       </div>
-    </>
+    </div>
   );
 };
 
