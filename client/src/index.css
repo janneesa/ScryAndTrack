@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+h1 {
+  @apply text-3xl font-bold text-white;
+}
+
+h2 {
+  @apply font-semibold text-white;
+}
+
 input {
   @apply w-full px-2 py-2 border border-gray-800 rounded-lg;
 }
@@ -8,12 +16,24 @@ input {
   @apply min-h-screen bg-black;
 }
 
-.App-content {
-  @apply p-4 max-w-6xl mx-auto;
-}
-
 .primary-background {
   @apply bg-black;
+}
+
+.secondary-background {
+  @apply bg-zinc-900;
+}
+
+.primary-header {
+  @apply text-2xl font-bold text-white mb-1;
+}
+
+.secondary-header {
+  @apply text-lg font-semibold text-white;
+}
+
+.primary-border {
+  @apply border border-zinc-700;
 }
 
 .primary-text {
@@ -41,5 +61,29 @@ input {
 }
 
 .link {
-  @apply hover:text-gray-800 transition;
+  @apply hover:text-zinc-400 transition;
+}
+
+.spacing-small {
+  @apply mb-2;
+}
+
+.spacing-medium {
+  @apply mb-4;
+}
+
+.spacing-large {
+  @apply mb-6;
+}
+
+.gap-small {
+  @apply gap-2;
+}
+
+.gap-medium {
+  @apply gap-4;
+}
+
+.gap-large {
+  @apply gap-6;
 }

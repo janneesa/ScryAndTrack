@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
 
   // Load user from localStorage on initial render
   useEffect(() => {
-    const storedUser = localStorage.getItem("scryAndTruckUser");
+    const storedUser = localStorage.getItem("scryAndTrackUser");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -19,13 +19,13 @@ export const UserProvider = ({ children }) => {
 
   // Login method: sets user and saves to localStorage
   const login = (userData) => {
-    localStorage.setItem("scryAndTruckUser", JSON.stringify(userData));
+    localStorage.setItem("scryAndTrackUser", JSON.stringify(userData));
     setUser(userData);
   };
 
   // Logout method: removes user from state and localStorage
   const logout = () => {
-    localStorage.removeItem("scryAndTruckUser");
+    localStorage.removeItem("scryAndTrackUser");
     setUser(null);
   };
 
