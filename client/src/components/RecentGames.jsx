@@ -27,13 +27,13 @@ function RecentGames() {
 
   return (
     <Card>
-      <h2 className="primary-header flex">
+      <h2 className="flex items-center text-xl font-semibold text-foreground">
         <span className="mr-2">
           <Calendar />
         </span>
         Recent Games
       </h2>
-      <p className="secondary-text mb-3">Your latest Commander battles</p>
+      <p className="mb-3 text-sm text-muted">Your latest Commander battles</p>
       <div className="space-y-3">
         {user ? (
           <>
@@ -42,13 +42,13 @@ function RecentGames() {
                 <RecentGame game={game} key={index} />
               ))
             ) : (
-              <p className="secondary-text">
+              <p className="text-sm text-muted">
                 No games played yet. Start a new game!
               </p>
             )}
           </>
         ) : (
-          <p className="secondary-text">Log in to see your games</p>
+          <p className="text-sm text-muted">Log in to see your games</p>
         )}
       </div>
     </Card>
@@ -70,15 +70,15 @@ function RecentGame({ game }) {
   return (
     <Card>
       <div className="flex">
-        <div className="primary-border rounded-full my-auto max-h-fit flex items-center justify-center min-w-12 min-h-12 mr-2">
-          <p className="secondary-header mb-1">
+        <div className="mr-2 flex min-h-12 min-w-12 max-h-fit items-center justify-center rounded-full border border-border">
+          <p className="mb-1 text-base font-semibold text-foreground">
             {game?.winner.deckId.name ? game?.winner.deckId.name[0] : "?"}
           </p>
         </div>
         <div>
           <div className="flex flex-col gap-1 p-1">
             <div className="flex gap-4">
-              <p className="primary-text">
+              <p className="text-sm text-foreground">
                 {game?.winner.deckId.name
                   ? game?.winner.deckId.name
                   : "Deck missing"}
@@ -91,7 +91,7 @@ function RecentGame({ game }) {
                 }
               />
             </div>
-            <div className="secondary-text flex flex-wrap gap-x-4 gap-y-1">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted">
               <span className="flex items-center">
                 <Trophy className="mr-1 h-4 w-4" />
                 Winner:{" "}
@@ -116,7 +116,7 @@ function RecentGame({ game }) {
               </span>
             </div>
             {/* TODO get the possible name of the playgroup */}
-            <p className="secondary-text">
+            <p className="text-sm text-muted">
               {game?.playgroup?.name ? game?.playgroup?.name : "Free game"}
             </p>
           </div>

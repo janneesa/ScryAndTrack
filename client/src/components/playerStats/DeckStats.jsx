@@ -6,13 +6,13 @@ function DeckStats() {
 
   return (
     <div>
-      <p className="primary-text mb-1">Decks</p>
-      <p className="secondary-text mb-2">Your Commander performance</p>
+      <p className="mb-1 text-sm text-foreground">Decks</p>
+      <p className="mb-2 text-sm text-muted">Your Commander performance</p>
       <div className="flex flex-col gap-2">
         {user?.decks ? (
           user.decks.map((deck, index) => <Deck deck={deck} key={index} />)
         ) : (
-          <p className="secondary-text text-sm">No decks created yet</p>
+          <p className="text-sm text-muted">No decks created yet</p>
         )}
       </div>
     </div>
@@ -24,21 +24,21 @@ function Deck({ deck }) {
   return (
     <div className="flex flex-col gap-1">
       <div>
-        <p className="primary-text">
+        <p className="text-sm text-foreground">
           {deck?.name ? deck?.name : "Deck name missing"}
         </p>
-        <p className="secondary-text">
+        <p className="text-sm text-muted">
           {deck?.commander ? deck?.commander : "Commander name missing"}
         </p>
       </div>
 
-      <div className="w-full bg-gray-700 h-2 rounded-md">
+      <div className="h-2 w-full rounded-md bg-border/60">
         <div
-          className="bg-white h-2 rounded-md"
+          className="h-2 rounded-md bg-white"
           style={{ width: `${deck?.winRate}%` }}
         ></div>
       </div>
-      <p className="text-gray-400 text-sm">
+      <p className="text-sm text-muted">
         {deck?.wins ? deck?.wins : "0"} / {deck?.games ? deck?.games : "0"} wins
       </p>
     </div>

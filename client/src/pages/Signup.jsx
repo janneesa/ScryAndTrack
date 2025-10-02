@@ -43,12 +43,12 @@ const Signup = () => {
   };
 
   return (
-    <div className="primary-text max-w-md mx-auto">
+    <div className="mx-auto max-w-md text-sm text-foreground">
       <Card>
         <h2 className="text-xl font-semibold mb-2">Sign Up</h2>
         <form className="space-y-2" onSubmit={handleFormSubmit}>
           <div className="flex flex-col gap-1">
-            <label className="secondary-text">Email address:</label>
+            <label className="text-sm text-muted">Email address:</label>
             <input
               type="email"
               value={email}
@@ -56,7 +56,7 @@ const Signup = () => {
             />
           </div>
           <div>
-            <label className="secondary-text">Username:</label>
+            <label className="text-sm text-muted">Username:</label>
             <input
               type="text"
               value={username}
@@ -64,7 +64,7 @@ const Signup = () => {
             />
           </div>
           <div>
-            <label className="secondary-text">Password:</label>
+            <label className="text-sm text-muted">Password:</label>
             <input
               type="password"
               value={password}
@@ -72,14 +72,16 @@ const Signup = () => {
             />
           </div>
           <div>
-            <label className="secondary-text">Confirm password:</label>
+            <label className="text-sm text-muted">Confirm password:</label>
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
-          <button className="button">Sign up</button>
+          <button className="flex items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-semibold text-foreground shadow-md transition hover:bg-surface hover:scale-105">
+            Sign up
+          </button>
         </form>
       </Card>
     </div>

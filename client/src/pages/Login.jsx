@@ -32,12 +32,12 @@ const Login = () => {
   };
 
   return (
-    <div className="primary-text max-w-md mx-auto">
+    <div className="mx-auto max-w-md text-sm text-foreground">
       <Card>
         <h2 className="text-xl font-semibold mb-2">Login</h2>
         <form className="space-y-2" onSubmit={handleFormSubmit}>
           <div className="flex flex-col gap-1">
-            <label className="secondary-text">Email address:</label>
+            <label className="text-sm text-muted">Email address:</label>
             <input
               type="email"
               value={email}
@@ -45,7 +45,7 @@ const Login = () => {
             />
           </div>
           <div className="flex flex-col gap-1 mb-4">
-            <label className="secondary-text">Password:</label>
+            <label className="text-sm text-muted">Password:</label>
             <input
               type="password"
               value={password}
@@ -53,7 +53,9 @@ const Login = () => {
             />
           </div>
 
-          <button className="button">Login</button>
+          <button className="flex items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-semibold text-foreground shadow-md transition hover:bg-surface hover:scale-105">
+            Login
+          </button>
         </form>
       </Card>
     </div>

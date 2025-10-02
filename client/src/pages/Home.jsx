@@ -14,21 +14,24 @@ const Home = () => {
 
   return (
     <div className="">
-      <div className="flex justify-center mb-4">
-        <button onClick={navigateToNewGame} className="button-white">
+      <div className="mb-4 flex justify-center">
+        <button
+          onClick={navigateToNewGame}
+          className="flex max-w-fit items-center justify-center rounded-lg bg-white px-4 py-2 font-semibold text-black shadow-md transition hover:scale-105"
+        >
           Create New Game
         </button>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 spacing-large">
+      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
         <Winrate />
         <FavoriteDeck />
         <FavoritePlaygroup />
       </div>
 
       {/* Recent Games & Player Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 spacing-large">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <RecentGames />
         <PlayerStats />
       </div>
