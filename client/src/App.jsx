@@ -24,7 +24,6 @@ function App() {
             <Route path="/newgame" element={user ? <NewGame /> : <Login />} />
           </Routes>
         </ContentWrapper>
-        <NavBar />
       </BrowserRouter>
     </div>
   );
