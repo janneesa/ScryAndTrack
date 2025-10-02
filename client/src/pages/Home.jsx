@@ -9,7 +9,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const navigateToNewGame = () => {
-    navigate("/newGame");
+    navigate("/newgame");
   };
 
   return (
