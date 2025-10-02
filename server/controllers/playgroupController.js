@@ -21,7 +21,7 @@ const createPlaygroup = async (req, res) => {
   }
 };
 
-// @desc addMember
+// @desc add a member to a playgroup
 // @route PUT /api/playgroups/addMember/
 // @access Private
 const addMember = async (req, res) => {
@@ -62,4 +62,60 @@ const addMember = async (req, res) => {
   }
 };
 
-module.exports = { createPlaygroup, addMember };
+// @desc get all players in a playgroup
+// @route GET /api/playgroups/players/:id
+// @access Private
+const getPlaygroupPlayers = async (req, res) => {
+  try {
+    if (!req.params.playgroupId) {
+      return res.status(400).json({ error: "Playgroup ID is required" });
+    }
+
+    const { playgroupId } = req.params;
+
+    // Check if id is a valid playgroup ID
+    if (!mongoose.Types.ObjectId.isValid(playgroupId)) {
+      return res.status(400).json({ error: "Invalid playgroup ID" });
+    }
+
+    const playgroup = await Playgroup.findById(playgroupId).populate(
+      "members",
+      "username email id"
+    );
+    if (!playgroup) {
+      return res.status(404).json({ error: "Playgroup not found" });
+    }
+    res.json(playgroup.members);
+  } catch (error) {
+    res.status(500).json({ error: error, details: error.message });
+  }
+};
+
+// @desc Used by matchApprovalWorker to add match to playgroups match history
+const addMatchToPlaygroupHistory = async (playgroupId, matchId, session) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(playgroupId)) {
+      throw new Error("Invalid playgroup ID");
+    }
+
+    const playgroup = await Playgroup.findById(playgroupId).session(session);
+    if (!playgroup) {
+      throw new Error("Playgroup not found");
+    }
+
+    playgroup.matchHistory.push(matchId);
+    const updatedPlaygroup = await playgroup.save({ session });
+    return updatedPlaygroup;
+  } catch (error) {
+    throw new Error(
+      `Failed to add match to playgroup history: ${error.message}`
+    );
+  }
+};
+
+module.exports = {
+  createPlaygroup,
+  addMember,
+  getPlaygroupPlayers,
+  addMatchToPlaygroupHistory,
+};

@@ -15,6 +15,15 @@ const playgroupSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
 
@@ -33,7 +42,7 @@ playgroupSchema.statics.createPlaygroup = async function (name, admin) {
 
   const playgroup = await this.create({ name, admin });
   const playgroupJson = playgroup.toJson();
-  return playgroup;
+  return playgroupJson;
 };
 
 module.exports = mongoose.model("Playgroup", playgroupSchema);

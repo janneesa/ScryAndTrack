@@ -6,8 +6,8 @@ function DeckStats() {
 
   return (
     <div>
-      <p className="primary-text font-semibold">Decks</p>
-      <p className="secondary-text text-sm mb-1">Your Commander performance</p>
+      <p className="primary-text mb-1">Decks</p>
+      <p className="secondary-text mb-2">Your Commander performance</p>
       <div className="flex flex-col gap-2">
         {user?.decks ? (
           user.decks.map((deck, index) => <Deck deck={deck} key={index} />)
@@ -24,10 +24,10 @@ function Deck({ deck }) {
   return (
     <div className="flex flex-col gap-1">
       <div>
-        <p className="primary-text font-semibold">
+        <p className="primary-text">
           {deck?.name ? deck?.name : "Deck name missing"}
         </p>
-        <p className="secondary-text text-sm mb-1">
+        <p className="secondary-text">
           {deck?.commander ? deck?.commander : "Commander name missing"}
         </p>
       </div>

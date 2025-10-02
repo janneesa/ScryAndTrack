@@ -15,7 +15,9 @@ export default function useFetchAny() {
       });
 
       if (!response.ok) {
-        const errorMessage = `Error: ${response.statusText}`;
+        const data = await response.json();
+        const errorMessage = `Error: ${data.error || data.statusText}`;
+        setIsLoading(false);
         setError(errorMessage);
         throw new Error(errorMessage);
       }

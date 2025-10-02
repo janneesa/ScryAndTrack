@@ -8,17 +8,17 @@ function FavoriteDeck() {
 
   return (
     <Card>
-      <h2 className="primary-text flex font-semibold text-md">
+      <h2 className="secondary-header flex">
         <span className="flex items-center">
           <WalletCards className="mr-2 h-5 w-5 text-blue-500" />
         </span>
         Favorite Deck
       </h2>
-      <p className="secondary-text text-sm">Your most used deck</p>
-      <p className="primary-text text-xl font-bold">
+      <p className="secondary-text">Your most used deck</p>
+      <p className="primary-header">
         {user?.mostPlayedDeck?.name || "No favorite deck"}
       </p>
-      <p className="secondary-text text-sm">
+      <p className="secondary-text">
         {user?.mostPlayedDeck?.games || 0} recorded games
       </p>
     </Card>

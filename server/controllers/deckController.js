@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Deck = require("../models/deckModel");
-const { find } = require("../models/userModel");
+const User = require("../models/userModel");
 
 // @desc Create a new deck
 // @route POST /api/decks
@@ -91,6 +91,25 @@ const deleteDeck = async (req, res) => {
   }
 };
 
+// @desc Fetch users every deck
+// @route GET /api/decks/user/:id
+// @access Private
+const getDecksByUserId = async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    const decks = await Deck.find({ owner: req.params.id }).populate("owner");
+    if (!decks) {
+      return res.status(404).json({ error: "No decks found" });
+    }
+    res.json(decks);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 // @desc Used by matchApprovalWorker to update winning decks stats
 const updateWinnerDeckStats = async (match, session) => {
   const { winner } = match;
@@ -149,6 +168,7 @@ module.exports = {
   getDeckById,
   updateDeck,
   deleteDeck,
+  getDecksByUserId,
   updateWinnerDeckStats,
   updateLoserDeckStats,
 };

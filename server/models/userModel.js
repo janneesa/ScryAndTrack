@@ -102,15 +102,6 @@ userSchema.statics.login = async function (email, password) {
   const user = await this.findOne({ email })
     .select("+password")
     .populate("decks")
-    .populate({
-      path: "matchHistory",
-      populate: [
-        { path: "winner.playerId", model: "User" },
-        { path: "winner.deckId", model: "Deck" },
-        { path: "losers", model: "User" },
-        { path: "losers", model: "Deck" },
-      ],
-    })
     .populate("mostPlayedDeck")
     .populate("friends")
     .populate("playgroups");

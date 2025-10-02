@@ -19,6 +19,11 @@ const matchSchema = new mongoose.Schema(
         required: true,
       },
     },
+    playgroup: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Playgroup",
+      required: false,
+    },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected", "error"],
@@ -28,6 +33,15 @@ const matchSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
 

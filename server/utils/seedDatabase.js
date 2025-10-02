@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(" ");
+    await mongoose.connect("");
     console.log("MongoDB connected");
   } catch (error) {
     console.error("MongoDB connection failed:", error.message);
@@ -26,9 +26,12 @@ const clearDatabase = async () => {
 
 const createTestUsers = async () => {
   const users = [
-    { email: "m@example.com", username: "Eren", password: "password" },
-    { email: "j@example.com", username: "Armin", password: "password" },
-    { email: "s@example.com", username: "Mikasa", password: "password" },
+    { email: "e@example.com", username: "Eren", password: "password" },
+    { email: "a@example.com", username: "Armin", password: "password" },
+    { email: "m@example.com", username: "Mikasa", password: "password" },
+    { email: "s@example.com", username: "Sasha", password: "password" },
+    { email: "b@example.com", username: "Bertolt", password: "password" },
+    { email: "y@example.com", username: "Ymir", password: "password" },
   ];
 
   const createdUsers = [];
@@ -77,6 +80,51 @@ const createTestDecks = async (users) => {
       name: "Horror",
       commander: "Atraxa, Praetors' Voice",
       colors: ["W", "U", "B", "G"],
+    },
+    {
+      name: "Angels of Innistrad",
+      commander: "Brisela, Voice of Nightmares",
+      colors: ["W"],
+    },
+    {
+      name: "Zombies of Innistrad",
+      commander: "Gisa and Geralf",
+      colors: ["U", "B"],
+    },
+    {
+      name: "Merfolk of Zendikar",
+      commander: "Tazri, Beacon of Unity",
+      colors: ["W", "U", "R", "G"],
+    },
+    {
+      name: "Spirits of Kamigawa",
+      commander: "Kaito Shizuki",
+      colors: ["U", "B"],
+    },
+    {
+      name: "Demons of Innistrad",
+      commander: "Grave Titan",
+      colors: ["B"],
+    },
+    {
+      name: "Angels of Theros",
+      commander: "Archangel of Wrath",
+      colors: ["W"],
+    },
+    {
+      name: "Beasts of Zendikar",
+      commander: "Ghalta, Primal Hunger",
+      colors: ["G"],
+    },
+    {
+      name: "Dinosaurs of Ixalan",
+      commander: "Gishath, Sun's Avatar",
+      colors: ["R", "G", "W"],
+    },
+    {
+      name: "Pirates of Ixalan",
+      commander: "Admiral Beckett Brass",
+      colors: ["U", "B", "R"],
     },
   ];
 
@@ -138,23 +186,48 @@ const createTestPlaygroups = async (users) => {
   const planeswalkerit = await Playgroup.create({
     name: "Perjantai Planeswalkerit",
     admin: users[0].id,
-    members: [users[0].id, users[1].id],
+    members: [
+      users[0].id,
+      users[1].id,
+      users[2].id,
+      users[3].id,
+      users[4].id,
+      users[5].id,
+    ],
   });
 
   const matang = await Playgroup.create({
     name: "Mätäng Emännyys",
     admin: users[1].id,
-    members: [users[1].id, users[0].id],
+    members: [users[1].id, users[0].id, users[2].id],
   });
 
   users[0].playgroups.push(planeswalkerit._id);
   users[1].playgroups.push(planeswalkerit._id);
+  users[2].playgroups.push(planeswalkerit._id);
+  users[3].playgroups.push(planeswalkerit._id);
+  users[4].playgroups.push(planeswalkerit._id);
+  users[5].playgroups.push(planeswalkerit._id);
   users[1].playgroups.push(matang._id);
   users[0].playgroups.push(matang._id);
+  users[2].playgroups.push(matang._id);
   await users[0].save();
   await users[1].save();
+  await users[2].save();
+  await users[3].save();
+  await users[4].save();
+  await users[5].save();
 
   return [planeswalkerit, matang];
+};
+
+const addFriends = async (users) => {
+  users[2].friends.push(users[0]._id);
+  users[2].friends.push(users[1]._id);
+  users[2].friends.push(users[3]._id);
+  users[2].friends.push(users[4]._id);
+  users[2].friends.push(users[5]._id);
+  await users[2].save();
 };
 
 const seedDatabase = async () => {
@@ -167,6 +240,7 @@ const seedDatabase = async () => {
   const usersWithDecks = await User.find({});
   await createTestMatches(usersWithDecks);
   await createTestPlaygroups(usersWithDecks);
+  await addFriends(usersWithDecks);
 
   console.log("Database seeded successfully");
   // console.log("Created Users:", users);

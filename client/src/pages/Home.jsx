@@ -8,10 +8,14 @@ import PlayerStats from "../components/playerStats/PlayerStats";
 const Home = () => {
   const navigate = useNavigate();
 
+  const navigateToNewGame = () => {
+    navigate("/newGame");
+  };
+
   return (
-    <>
-      <div className="flex justify-center spacing-large">
-        <button className="button-white" onClick={() => navigate("/newgame")}>
+    <div className="">
+      <div className="flex justify-center mb-4">
+        <button onClick={navigateToNewGame} className="button-white">
           Create New Game
         </button>
       </div>
