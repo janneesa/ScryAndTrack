@@ -10,26 +10,29 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="items-center primary-background py-4 px-6 border-b border-gray-800">
+    <nav className="items-center border-b border-border bg-background px-6 py-4">
       <div className="max-w-5xl flex justify-between items-center mx-auto">
-        <h1 className="primary-header">
+        <h1 className="text-xl font-semibold text-foreground">
           <Link to="/">Scry&Track</Link>
         </h1>
-        <ul className="primary-text flex gap-4">
+        <ul className="flex gap-4 text-sm text-foreground">
           {user ? (
             <>
               <li>
-                <Link to="/" className="link">
+                <Link to="/" className="transition hover:text-muted">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/" className="link">
+                <Link to="/" className="transition hover:text-muted">
                   Games
                 </Link>
               </li>
               <li>
-                <button onClick={handleLogout} className="link cursor-pointer">
+                <button
+                  onClick={handleLogout}
+                  className="cursor-pointer transition hover:text-muted"
+                >
                   Logout
                 </button>
               </li>
@@ -37,12 +40,12 @@ const NavBar = () => {
           ) : (
             <>
               <li>
-                <Link to="/login" className="link">
+                <Link to="/login" className="transition hover:text-muted">
                   Login
                 </Link>
               </li>
               <li>
-                <Link to="/signup" className="link">
+                <Link to="/signup" className="transition hover:text-muted">
                   Signup
                 </Link>
               </li>

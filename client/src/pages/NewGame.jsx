@@ -16,6 +16,13 @@ function NewGame() {
   const [winner, setWinner] = useState({ playerId: "", deckId: "" });
   const [losers, setLosers] = useState([{ playerId: "", deckId: "" }]);
 
+  const primaryButtonClasses =
+    "flex cursor-pointer items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-semibold text-foreground shadow-md transition hover:bg-surface hover:scale-105";
+  const disabledButtonClasses =
+    "flex max-w-fit cursor-not-allowed items-center justify-center rounded-lg bg-surface px-4 py-2 text-sm font-semibold text-muted";
+  const ctaButtonClasses =
+    "flex max-w-fit items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black shadow-md transition hover:scale-105";
+
   useEffect(() => {
     setPlaygroups(user?.playgroups || []);
   }, [user]);
@@ -124,14 +131,24 @@ function NewGame() {
     }
   };
 
+  const isSaveDisabled =
+    !winner.playerId ||
+    !winner.deckId ||
+    !losers.every((loser) => loser.playerId && loser.deckId) ||
+    isLoading;
+
+  const saveButtonClasses = isSaveDisabled
+    ? disabledButtonClasses
+    : ctaButtonClasses;
+
   return (
-    <div className="max-w-3xl mx-auto flex flex-col gap-4">
+    <div className="mx-auto flex max-w-3xl flex-col gap-4">
       <Card>
-        <h2 className="primary-header flex">
-          <Gamepad2 className="mr-2 primary-text" />
+        <h2 className="flex items-center text-xl font-semibold text-foreground">
+          <Gamepad2 className="mr-2 h-5 w-5 text-foreground" />
           Game Details
         </h2>
-        <p className="secondary-text">
+        <p className="text-sm text-muted">
           Set the basic information about your Commander game
         </p>
 
@@ -145,13 +162,13 @@ function NewGame() {
       </Card>
 
       <Card>
-        <h2 className="primary-header flex">
-          <Users className="mr-2 primary-text" />
+        <h2 className="flex items-center text-xl font-semibold text-foreground">
+          <Users className="mr-2 h-5 w-5 text-foreground" />
           Players & Decks
         </h2>
-        <p className="secondary-text">Who played and what decks were used</p>
+        <p className="text-sm text-muted">Who played and what decks were used</p>
 
-        <p className="secondary-header mt-4">Winner</p>
+        <p className="mt-4 text-lg font-semibold text-foreground">Winner</p>
         <PlayerSelector
           players={players}
           selectedPlayer={winner.playerId}
@@ -161,11 +178,14 @@ function NewGame() {
           }
         />
 
-        <div className="w-full h-0.5 bg-zinc-800 mb-2 mt-4" />
+        <div className="mt-4 mb-2 h-0.5 w-full bg-border/60" />
 
         <div className="flex justify-between items-center">
-          <p className="secondary-header">Other Players</p>
-          <button onClick={addLoser} className="button primary-text">
+          <p className="text-lg font-semibold text-foreground">Other Players</p>
+          <button
+            onClick={addLoser}
+            className={`${primaryButtonClasses} max-w-fit`}
+          >
             <UserPlus className="mr-2 h-5 w-5" />
             Add player
           </button>
@@ -186,23 +206,11 @@ function NewGame() {
           </div>
         ))}
 
-        <div className="flex justify-center my-2">
+        <div className="my-2 flex justify-center">
           <button
             onClick={handleSaveGame}
-            disabled={
-              !winner.playerId ||
-              !winner.deckId ||
-              !losers.every((loser) => loser.playerId && loser.deckId) ||
-              isLoading
-            }
-            className={
-              !winner.playerId ||
-              !winner.deckId ||
-              !losers.every((loser) => loser.playerId && loser.deckId) ||
-              isLoading
-                ? "button-disabled"
-                : "button-white"
-            }
+            disabled={isSaveDisabled}
+            className={saveButtonClasses}
           >
             <Save className="mr-2 h-5 w-5" />
             {isLoading ? "Saving..." : "Save Game"}
@@ -222,14 +230,14 @@ function GameTypeSelector({
 }) {
   return (
     <div className="mt-2">
-      <label className="primary-text">Game Type</label>
-      <div className="mt-2 flex px-1.5 py-1 rounded-l-md primary-border secondary-background max-h-10">
+      <label className="text-sm text-foreground">Game Type</label>
+      <div className="mt-2 flex max-h-10 rounded-md border border-border bg-surface px-1.5 py-1">
         <button
           onClick={() => setGameType("free")}
-          className={`flex items-center justify-center w-1/2 rounded-md ${
+          className={`flex w-1/2 items-center justify-center rounded-md px-3 py-2 text-sm font-semibold transition ${
             gameType === "free"
-              ? "primary-background primary-text"
-              : "secondary-background secondary-text"
+              ? "bg-background text-foreground hover:bg-background/80"
+              : "bg-surface text-muted hover:bg-surface/80"
           }`}
         >
           <UserPlus className="mr-2 h-5 w-5" />
@@ -237,10 +245,10 @@ function GameTypeSelector({
         </button>
         <button
           onClick={() => setGameType("playgroup")}
-          className={`flex items-center justify-center w-1/2 p-3 rounded-md ${
+          className={`flex w-1/2 items-center justify-center rounded-md px-3 py-2 text-sm font-semibold transition ${
             gameType === "playgroup"
-              ? "primary-background primary-text"
-              : "secondary-background secondary-text"
+              ? "bg-background text-foreground hover:bg-background/80"
+              : "bg-surface text-muted hover:bg-surface/80"
           }`}
         >
           <Users className="mr-2 h-5 w-5" />
@@ -249,13 +257,13 @@ function GameTypeSelector({
       </div>
 
       {gameType === "playgroup" && (
-        <div className="mt-2 flex gap-4 primary-text">
+        <div className="mt-2 flex gap-4 text-sm text-foreground">
           <div className="flex flex-col w-full">
-            <label className="primary-text mb-1">Playgroup</label>
+            <label className="mb-1 text-sm text-foreground">Playgroup</label>
             <select
               onChange={(e) => setPlaygroup(e.target.value)}
               value={playgroup}
-              className="p-2 rounded-md primary-border focus:outline-none"
+              className="rounded-md border border-border bg-background p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-border/60"
             >
               <option value="">Select playgroup</option>
               {playgroups?.map((group) => (
@@ -268,7 +276,7 @@ function GameTypeSelector({
         </div>
       )}
 
-      <p className="secondary-text mt-2">
+      <p className="mt-2 text-sm text-muted">
         {gameType === "free"
           ? "Create a game with any of your friends, regardless of playgroup."
           : "Create a game with your playgroup members only."}
@@ -328,11 +336,11 @@ function PlayerSelector({
   };
 
   return (
-    <div className="flex gap-4 justify-center">
-      <div className="flex flex-col w-full">
-        <label className="primary-text mb-1">Player</label>
+    <div className="flex justify-center gap-4">
+      <div className="flex w-full flex-col">
+        <label className="mb-1 text-sm text-foreground">Player</label>
         <select
-          className="p-2 rounded-md primary-border"
+          className="rounded-md border border-border bg-background p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-border/60"
           onChange={handlePlayerChange}
           value={selectedPlayer}
         >
@@ -350,11 +358,11 @@ function PlayerSelector({
           )}
         </select>
       </div>
-      <div className="flex flex-col w-full">
-        <label className="primary-text mb-1">Deck</label>
-        <div className="flex gap-2 items-center">
+      <div className="flex w-full flex-col">
+        <label className="mb-1 text-sm text-foreground">Deck</label>
+        <div className="flex items-center gap-2">
           <select
-            className="p-2 rounded-md primary-border"
+            className="rounded-md border border-border bg-background p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-border/60"
             onChange={handleDeckChange}
             value={selectedDeck}
             disabled={!decks.length}
@@ -370,7 +378,7 @@ function PlayerSelector({
           {isDeletable && (
             <button
               type="button"
-              className="p-2 text-red-600 border cursor-pointer border-zinc-800 rounded-lg"
+              className="rounded-lg border border-border p-2 text-red-500 transition hover:bg-surface"
               onClick={onDelete}
             >
               <Trash2 className="h-5 w-5" />

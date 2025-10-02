@@ -31,22 +31,24 @@ function FavoritePlaygroup() {
 
   return (
     <Card>
-      <h2 className="secondary-header flex">
+      <h2 className="flex items-center text-lg font-semibold text-foreground">
         <span className="flex items-center">
           <Users className="mr-2 h-5 w-5 text-green-500" />
         </span>
         Favourite Playgroup
       </h2>
-      <p className="secondary-text">Who you play with most</p>
+      <p className="text-sm text-muted">Who you play with most</p>
       {mostPlayedPlaygroup ? (
         <>
-          <p className="primary-header">{mostPlayedPlaygroup.name}</p>
-          <p className="secondary-text">
+          <p className="text-xl font-semibold text-foreground">
+            {mostPlayedPlaygroup.name}
+          </p>
+          <p className="text-sm text-muted">
             {mostPlayedPlaygroup.matchHistory.length} recorded games
           </p>
         </>
       ) : (
-        <p className="primary-text">No playgroup data available</p>
+        <p className="text-sm text-foreground">No playgroup data available</p>
       )}
     </Card>
   );

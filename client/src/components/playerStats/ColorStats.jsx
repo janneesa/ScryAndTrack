@@ -2,8 +2,8 @@ function ColorStats() {
   return (
     // TODO: Add color stats
     <div className="flex flex-col">
-      <p className="primary-text mb-1">Color preference</p>
-      <p className="secondary-text mb-4">
+      <p className="mb-1 text-sm text-foreground">Color preference</p>
+      <p className="mb-4 text-sm text-muted">
         Color distribuition between all decks
       </p>
       <div className="flex justify-around">
@@ -13,7 +13,7 @@ function ColorStats() {
         <img src="/assets/R.svg" alt="Red mana" className="w-6 h-6" />
         <img src="/assets/G.svg" alt="Green mana" className="w-6 h-6" />
       </div>
-      <div className="primary-text flex justify-around">
+      <div className="flex justify-around text-sm text-foreground">
         <p>35%</p>
         <p>35%</p>
         <p>35%</p>
