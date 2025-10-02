@@ -364,8 +364,6 @@ function PlayerSelector({
   );
 }
 
-export default NewGame;
-
 import { useContext, useEffect, useState } from "react";
 import { Gamepad2, Users, UserPlus, Trash2, Save } from "lucide-react";
 import { UserContext } from "../context/UserContext";
